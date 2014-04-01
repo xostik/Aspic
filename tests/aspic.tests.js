@@ -110,10 +110,6 @@ describe('Aspic', function() {
 
 					'#single':{
 						withProperty: 'single'
-					},
-
-					'textarea':{
-						withProperty: 'comment'
 					}
 				},
 				
@@ -204,16 +200,28 @@ describe('Aspic', function() {
 			expect(lineInstance.multiple().join(' ')).to.equal('m1 m3');		
         });	
 		
+		it('Model state after add dynamic view', function () {
+		    lineViewInstance.bindWithField(	'textarea', {
+		        withProperty: 'comment'
+		    });
+		    expect(lineInstance._events['change:comment'].length).to.equal(1);
+		});
+
 		it('Bind model property with textarea', function () {
-            expect($('textarea').val()).to.equal('some text');
-			
-			lineInstance.comment('ups text');
-			expect($('textarea').val()).to.equal('ups text');
-			
-			$('textarea').val('txt').change();	
-			expect(lineInstance.comment()).to.equal('txt');		
-        });	
-		
+		    expect($('textarea').val()).to.equal('some text');
+
+		    lineInstance.comment('ups text');
+		    expect($('textarea').val()).to.equal('ups text');
+
+		    $('textarea').val('txt').change();
+		    expect(lineInstance.comment()).to.equal('txt');
+		});
+
+		it('Model state after remove dynamic view', function () {
+		    lineViewInstance.unbindFromField('textarea');
+		    expect(lineInstance._events['change:comment']).to.be.undefined;
+		});
+
 		it('Model state after remove view', function () {
 			lineViewInstance.remove();
 			expect(lineInstance.p1()._events['change:x']).to.be.undefined;
